@@ -1,0 +1,57 @@
+# Qt编译产物
+*.o
+*.a
+*.so
+*.dll
+*.exe
+*.lib
+*.obj
+*.moc
+*.qmlc
+*.jsc
+
+# 构建目录
+build-*/
+release/
+debug/
+tmp/
+.qmake.stash
+
+# Qt Creator项目配置
+*.pro.user
+*.pro.user.*
+.idea/
+.vs/
+.vscode/
+.qsyncthing/
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# 临时文件和备份
+*~
+*.bak
+*.swp
+*.tmp
+
+# 日志文件
+*.log
+
+# 数据库文件
+*.db
+*.sqlite
+
+# 配置文件（含敏感信息）
+config.ini
+.env
+
+# QML相关
+*.qmlc
+*.jsc
+.qmldir.cache
+.qtc_clangd/
+.qtcreatorcrashhandler
+
