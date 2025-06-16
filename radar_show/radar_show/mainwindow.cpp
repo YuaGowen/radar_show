@@ -11,8 +11,12 @@
 #include <QDesktopWidget>
 #include <QShortcut>
 #include "lidarmapview.h"
-
+#include <QTableWidget>
+#include <QHeaderView>
 #pragma execution_character_set("utf-8")
+
+// mainwindow.cpp
+MainWindow* g_mainWindow = nullptr; // 初始化为nullptr
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     , lidarmapview1(new LidarMapView(this))
 {
     ui->setupUi(this);
-
+    g_mainWindow = this;
     lidarmapview1->setPkg(lidarPkg);
     /* 刷新端口用定时器 */
     refreshTimer = new QTimer();
@@ -44,6 +48,22 @@ MainWindow::~MainWindow()
 }
 
 
+//void MainWindow::layoutInit()
+//{
+//    //菜单栏背景色设置
+//    ui->menubar->setStyleSheet("QMenuBar:item{background-color:rgb(200, 200, 200);}"
+//                             "QMenuBar{background-color:rgb(200, 200, 200);}");
+//    // 在界面初始化时
+//   // RadarWidget *radarWidget = new RadarWidget(this);
+//    vLayout = new QVBoxLayout(this->centralWidget());
+////    vLayout->layout()->addWidget(radarWidget);
+//    vLayout->layout()->addWidget(lidarmapview1);
+////    hLayout = new QHBoxLayout();
+////    lidarMapLayout = new QVBoxLayout();
+////    vLayout->addLayout(hLayout, 12);
+////    hLayout->addLayout(lidarMapLayout, 1);
+//}
+
 void MainWindow::layoutInit()
 {
     //菜单栏背景色设置
@@ -52,12 +72,30 @@ void MainWindow::layoutInit()
     // 在界面初始化时
    // RadarWidget *radarWidget = new RadarWidget(this);
     vLayout = new QVBoxLayout(this->centralWidget());
-//    vLayout->layout()->addWidget(radarWidget);
-    vLayout->layout()->addWidget(lidarmapview1);
-//    hLayout = new QHBoxLayout();
-//    lidarMapLayout = new QVBoxLayout();
-//    vLayout->addLayout(hLayout, 12);
-//    hLayout->addLayout(lidarMapLayout, 1);
+    imageInfoTable = new QTableWidget(this);
+
+    imageInfoTable->setColumnCount(5); // 设置列数为5
+    imageInfoTable->setRowCount(3); // 设置行数为3
+
+    // 关键设置：使表格单元格保持正方形
+    imageInfoTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    imageInfoTable->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    // 设置水平表头（列号区域）内容
+    QStringList columnHeaders;
+    columnHeaders << "点1" << "点2" << "点3" << "点4" << "点5";
+    imageInfoTable->setHorizontalHeaderLabels(columnHeaders);
+
+    // 设置垂直表头（行号区域）内容
+    QStringList rowHeaders;
+    rowHeaders << "距离mm" << "速度m/s" << "角度°";
+    imageInfoTable->setVerticalHeaderLabels(rowHeaders);
+
+    // 设置表格的 sizePolicy 使其填充父容器
+    imageInfoTable->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    vLayout->addWidget(imageInfoTable,2);
+    vLayout->addWidget(lidarmapview1,12);
 }
 
 void MainWindow::statusBarInit()

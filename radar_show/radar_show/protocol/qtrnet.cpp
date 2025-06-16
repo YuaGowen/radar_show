@@ -8,7 +8,8 @@
 #include <QtMath>
 #include "sslbf.h"
 #include "qdebug.h"
-
+#include <QTableWidget>
+#include "mainwindow.h"
 QTRNet::QTRNet(QSerialPort *serialPort) : QObject(serialPort)
 {
     if (serialPort == NULL)
@@ -245,6 +246,8 @@ void QTRNet::parseMapData(TRData *pack)
 
         if(pack->device_address == 0)
             pack->device_address = 1;
+
+        g_mainWindow->imageInfoTable->clearContents();//清空表格
         for(int i = 0, n = 0; i < data_len; i += 6, n++)
         {
             MapData data;
@@ -263,6 +266,18 @@ void QTRNet::parseMapData(TRData *pack)
                 data.centriod = origin_data_speed/100.0;
                 int16_t origin_data_angle = *(int16_t *)(pack->data.data() + i + 4);
                 data.angle = origin_data_angle/100.0;
+
+                g_mainWindow->imageInfoTable->setItem(0, n, new QTableWidgetItem(QString::number(data.distance)));
+                g_mainWindow->imageInfoTable->setItem(1, n, new QTableWidgetItem(QString::number(data.centriod)));
+                g_mainWindow->imageInfoTable->setItem(2, n, new QTableWidgetItem(QString::number(data.angle)));
+
+                // 设置文本居中对齐
+                QTableWidgetItem* distanceItem = g_mainWindow->imageInfoTable->item(0, n);
+                QTableWidgetItem* centroidItem = g_mainWindow->imageInfoTable->item(1, n);
+                QTableWidgetItem* angleItem = g_mainWindow->imageInfoTable->item(2, n);
+                distanceItem->setTextAlignment(Qt::AlignCenter);
+                centroidItem->setTextAlignment(Qt::AlignCenter);
+                angleItem->setTextAlignment(Qt::AlignCenter);
 
                 qDebug() << "n=" << n << ","<<data.distance <<","<<data.centriod <<","<<data.angle;
                 //做角度计算
@@ -333,90 +348,6 @@ void QTRNet::parseMapData(TRData *pack)
             {
                 break;//未定义型号不做处理
             }
-
-//            // 原有的全角度角度分辨率计算、全角度最大最小值计算，仅debug使用，未输出到点云图
-//            if((-max_angel) <= data.angle && data.angle <= max_angel)
-//            {
-//                if(data.angle != -90)
-//                {
-//                    if(data.angle - last_angle > AR)
-//                    {
-//                        //qDebug() << "n=" << n << ","<<AR<<data.angle<<","<<last_angle;
-//                        AR = data.angle - last_angle;
-//                       // angleResolution = AR;
-//                    }
-//                }
-//                if(dis_source > max_dis)
-//                {
-//                    max_dis = dis_source;
-//                }
-//                if(dis_source < min_dis && dis_source != 0)
-//                {
-//                    min_dis = dis_source;
-//                }
-//                last_angle = data.angle;
-//            }
-
-            // 后增加的，获得精度测试输出数据，共用，输出到点原图
-//            uint16_t temp = data.dis_source;
-//            if(lidarType=="SSL-20L2")
-//            {
-//                //按距离消除距离为零和无穷大的点
-//                if(temp >= 511)
-//                    continue;
-//            }
-
-//            if(temp != 0 && data.angle > -35 && data.angle < 35)//±35°以内, 70度视场角以内
-//            {
-//                if(temp > maxDis_in_70 && temp < 1900)//获得最大值
-//                {
-//                    maxDis_in_70 = temp;
-//                }
-
-//                if(temp < minDis_in_70 && temp > 10)//获得最小值
-//                {
-//                    minDis_in_70 = temp;
-//                }
-//            }
-//            else if(temp != 0 && data.angle >= (-max_angel) && data.angle <= max_angel)//±35°以外，额定视场角以内
-//            {
-//                if(temp > maxDis_out_70 && temp < 1900)//获得最大值
-//                {
-//                    maxDis_out_70 = temp;
-//                }
-
-//                if(temp < minDis_out_70 && temp > 10)//获得最小值
-//                {
-//                    minDis_out_70 = temp;
-//                }
-
-//                    //此处计算数据有问题
-//    //                if(lastAngle != (-max_angel))//获得角分辨率
-//    //                {
-//    //                    if(data.angle - lastAngle > angleResolution)
-//    //                    {
-//    //                        angleResolution = data.angle - lastAngle;
-//    //                    }
-//    //                }
-//    //                lastAngle = data.angle;
-//            }
-
-//            if(temp != 0 && data.angle >= (-max_angel) && data.angle <= max_angel)//获得距离的和计算平均值
-//            {
-//                average_sum += temp;
-//                average_cnt++;
-//            }
-
-//            if(temp != 0)
-//            {
-//                if(data.angle < 0) {//获得左右角度
-//                    if(data.angle < left_angle)
-//                        left_angle = data.angle;
-//                } else {
-//                    if(data.angle > right_angle)
-//                        right_angle = data.angle;
-//                }
-//            }
 
             tempLidarData.push_back(data);//统一添加点
         }

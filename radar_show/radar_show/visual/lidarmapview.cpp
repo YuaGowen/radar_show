@@ -325,7 +325,12 @@ void LidarMapView::setMap()
         indicatrixPoint = getAnglePos(clickAngle, mapTmp);
         indicatrixAngle = mapTmp[indicatrixPoint].angle;
 
+        indicatrixDis = mapTmp[indicatrixPoint].distance * circleDiameter / 8 / 1000 / 2 * 1.9;
         QPointF indicatrixEndPoint = QPointF(indicatrixDis * qCos(indicatrixAngle * M_PI / 180), -indicatrixDis * qSin(indicatrixAngle * M_PI / 180));
+   //        // 打印参数值
+//        qDebug() << "indicatrixDis:" << indicatrixDis;
+//        qDebug() << "indicatrixAngle:" << indicatrixAngle;
+//        qDebug() << "indicatrixEndPoint:" << indicatrixEndPoint.x() << "," << indicatrixEndPoint.y();
 
         //绘制连接线
         p.setRenderHint(QPainter::Antialiasing, true);
@@ -347,8 +352,39 @@ void LidarMapView::setMap()
         if(isPointTextEnable)
         {
          //   p.drawText(indicatrixEndPoint * zoomScale, QString("%1(%2),%3%4,%5(%6)mm,%7").arg(mapTmp[indicatrixPoint].index).arg(mapTmp[indicatrixPoint].real_index).arg(indicatrixAngle,0,'f',1).arg(QStringLiteral("°")).arg(mapTmp[indicatrixPoint].dis_source).arg(mapTmp[indicatrixPoint].distance).arg(mapTmp[indicatrixPoint].intensity));
+            p.drawText(indicatrixEndPoint * zoomScale, QString("%1,%2c  m,%3%4,%5").arg(mapTmp[indicatrixPoint].index).arg(mapTmp[indicatrixPoint].distance).arg(indicatrixAngle,0,'f',1).arg(QStringLiteral("°")).arg(mapTmp[indicatrixPoint].centriod));
+
         }
     }
+    //    if(mapTmp.size() != 0)
+    //    {
+    //        indicatrixPoint = getAnglePos(clickAngle, mapTmp);
+    //        indicatrixAngle = mapTmp[indicatrixPoint].angle;
+
+    //        QPointF indicatrixEndPoint = QPointF(indicatrixDis * qCos(indicatrixAngle * M_PI / 180), -indicatrixDis * qSin(indicatrixAngle * M_PI / 180));
+
+    //        //绘制连接线
+    //        p.setRenderHint(QPainter::Antialiasing, true);
+    //        renderPen.setStyle(Qt::DotLine);
+    //        QColor inverse = QColor(255 - backgroundColor.red(), 255 - backgroundColor.green(), 255 - backgroundColor.blue(),255);
+    //        renderPen.setColor(inverse);
+    //        p.setPen(renderPen);
+    //        p.drawLine(QPoint(0,0), indicatrixEndPoint);
+
+    //        //绘制角度 距离 置信度
+    //        p.scale(1 / zoomScale, -1 / zoomScale);
+    //        QFont f("Times", 15, QFont::Thin);
+    //        p.setFont(f);
+    //        renderPen.setColor(textColor);
+    //        p.setPen(renderPen);
+    //        p.rotate(90);
+
+    //        indicatrixEndPoint = QPointF(-indicatrixEndPoint.y(), -indicatrixEndPoint.x());
+    //        if(isPointTextEnable)
+    //        {
+    //         //   p.drawText(indicatrixEndPoint * zoomScale, QString("%1(%2),%3%4,%5(%6)mm,%7").arg(mapTmp[indicatrixPoint].index).arg(mapTmp[indicatrixPoint].real_index).arg(indicatrixAngle,0,'f',1).arg(QStringLiteral("°")).arg(mapTmp[indicatrixPoint].dis_source).arg(mapTmp[indicatrixPoint].distance).arg(mapTmp[indicatrixPoint].intensity));
+    //        }
+    //    }
 }
 
 double onlineOffsetFunction(double x, double coe, double power, int distance)

@@ -96,8 +96,8 @@ private:
     QPoint mousePos=QPoint(0,0);
     bool moveFlag = false;
 
-    QColor backgroundColor=QColor(0x40,0x4A,0x59,0xff);
-    //QColor backgroundColor = QColor(235,235,235,255);
+    //QColor backgroundColor=QColor(0x40,0x4A,0x59,0xff);
+    QColor backgroundColor = QColor(235,235,235,255);
     QColor textColor=QColor(0x0,0xff,0x0,0xff);
     QColor pointColor=QColor(0xff,0xff,0xff,0xff);
 

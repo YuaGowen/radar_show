@@ -9,6 +9,8 @@
 #include <QVBoxLayout>
 #include "lidarmapview.h"
 #include "qtrnet.h"
+#include <QTableWidget>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; class RadarWidget;}
@@ -21,7 +23,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    QTableWidget *imageInfoTable;
 private:
     Ui::MainWindow *ui;
     const QString SETTINGS_NAME = "minishow_pro.ini";
@@ -75,7 +77,8 @@ private slots:
  //   void openJigPage(void);
 
 };
-
+// mainwindow.h
+extern MainWindow* g_mainWindow; // 声明全局指针
 
 #include <QWidget>
 #include <QPainter>

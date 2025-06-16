@@ -12,6 +12,10 @@ int main(int argc, char *argv[])
     /* 整体风格扁平化 */
     a.setStyle(QStyleFactory::create("Fusion"));
     MainWindow w;
+
+    // 设置窗口标题为 RadarShow
+    w.setWindowTitle("RadarShow");
+
     w.show();
     return a.exec();
 }
